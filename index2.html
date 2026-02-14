@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kuyin's Valentine 😏</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: #ffe6e6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+      text-align: center;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 2em;
+      color: #ff3366;
+      margin: 20px;
+    }
+
+    button {
+      font-size: 1.2em;
+      padding: 15px 25px;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: transform 0.2s, left 0.1s, top 0.1s;
+      position: absolute;
+    }
+
+    #yesBtn {
+      background-color: #ff4d4d;
+      color: white;
+      left: 50%;
+  top: 65%; /* change from 50% to 75% */
+  transform: translate(-50%, -50%);
+  position: absolute;
+    }
+
+    #noBtn {
+        background-color: #4dff4d;
+  color: black;
+  left: 50%;
+  top: 65%; /* change from 50% to 75% */
+  transform: translate(-50%, -50%);
+  position: absolute;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+    }
+
+    #message {
+      font-size: 1.5em;
+      color: #333;
+      margin-top: 30px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .heart {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background-color: red;
+      transform: rotate(45deg);
+      animation: floatUp 3s linear infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background-color: red;
+      border-radius: 50%;
+    }
+
+    .heart::before { top: -20px; left: 0; }
+    .heart::after { left: 20px; top: 0; }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(45deg); opacity: 1; }
+      100% { transform: translateY(-600px) rotate(45deg); opacity: 0; }
+    }
+
+  </style>
+</head>
+<body>
+  <h1>Today is Lovers' Day 😏<br>Will You Be My Valentine, Kuyin?</h1>
+  <button id="yesBtn">YES 😘</button>
+  <button id="noBtn">NO 😱</button>
+
+  <video id="funnyVideo" width="300" style="display:none; margin-top:20px;" autoplay>
+    <source src="cute.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <div id="message"></div>
+
+  <script>
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const message = document.getElementById('message');
+
+    // Initially place YES button randomly on screen
+    placeYesButton();
+
+    // YES button constantly dodges cursor
+    yesBtn.addEventListener('mousemove', moveYesButton); // desktop
+    yesBtn.addEventListener('touchstart', moveYesButton); // mobile
+
+    function placeYesButton() {
+      const maxX = window.innerWidth - yesBtn.offsetWidth;
+      const maxY = window.innerHeight - yesBtn.offsetHeight;
+      yesBtn.style.left = Math.random() * maxX + 'px';
+      yesBtn.style.top = Math.random() * maxY + 'px';
+    }
+
+    function moveYesButton() {
+      const maxX = window.innerWidth - yesBtn.offsetWidth;
+      const maxY = window.innerHeight - yesBtn.offsetHeight;
+
+      // Move randomly anywhere on screen
+      yesBtn.style.left = Math.random() * maxX + 'px';
+      yesBtn.style.top = Math.random() * maxY + 'px';
+    }
+
+    // NO button click - triggers video, hearts, messages
+    noBtn.addEventListener('click', () => {
+      message.innerHTML = "";
+      createConfetti(50);
+
+      let messages = [
+        "Kuyin, you just made the best decision ever 😏",
+        "Warning: Extreme cuteness incoming 💖",
+        "Prepare for unlimited memes and love 😎",
+        "You are officially my Valentine, Kuyin! ❤️"
+      ];
+
+      const video = document.getElementById('funnyVideo');
+      video.style.display = 'block';
+      video.play();
+
+      let i = 0;
+      const interval = setInterval(() => {
+        if(i >= messages.length) {
+          clearInterval(interval);
+        } else {
+          message.innerHTML = messages[i];
+          createHeart("Kuyin");
+          i++;
+        }
+      }, 1500);
+    });
+
+    // Floating hearts
+    function createHeart(text) {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.style.left = Math.random() * window.innerWidth + 'px';
+      heart.style.animationDuration = 2 + Math.random() * 2 + 's';
+      heart.innerText = text;
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 3000);
+    }
+
+    // Confetti
+    function createConfetti(amount) {
+      for (let i = 0; i < amount; i++) {
+        createHeart("💖");
+      }
+    }
+
+    // Shake phone effect
+    if (window.DeviceMotionEvent) {
+      let lastX = null, lastY = null, lastZ = null;
+      window.addEventListener('devicemotion', function(event) {
+        const acc = event.accelerationIncludingGravity;
+        if(lastX !== null) {
+          let deltaX = Math.abs(acc.x - lastX);
+          let deltaY = Math.abs(acc.y - lastY);
+          let deltaZ = Math.abs(acc.z - lastZ);
+          if(deltaX + deltaY + deltaZ > 25) {
+            message.innerHTML = "Whoa! You're shaking my heart 😏💖";
+            createConfetti(20);
+          }
+        }
+        lastX = acc.x; lastY = acc.y; lastZ = acc.z;
+      });
+    }
+  </script>
+</body>
+</html>
